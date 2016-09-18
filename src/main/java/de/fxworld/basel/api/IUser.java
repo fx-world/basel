@@ -2,10 +2,6 @@ package de.fxworld.basel.api;
 
 public interface IUser {
 
-	String getUsername();
-
-	void setUsername(String username);
-
 	String getPassword();
 
 	void setPassword(String password);
@@ -21,8 +17,6 @@ public interface IUser {
 	String getLastName();
 
 	void setLastName(String lastName);
-
-	long getId();
 
 	Iterable<? extends IRole> getRoles();
 
