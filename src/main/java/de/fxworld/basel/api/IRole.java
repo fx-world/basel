@@ -1,6 +1,6 @@
 package de.fxworld.basel.api;
 
-public interface IRole {
+public interface IRole extends IEntity {
 
 	String getDescription();
 

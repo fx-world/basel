@@ -1,6 +1,6 @@
 package de.fxworld.basel.api;
 
-public interface IUser {
+public interface IUser extends IEntity {
 
 	String getPassword();
 
