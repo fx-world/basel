@@ -1,6 +1,7 @@
 package de.fxworld.basel.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,8 +12,9 @@ import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.fxworld.basel.api.IEntity;
 import de.fxworld.basel.api.IGroup;
-import de.fxworld.basel.utils.BagComparator;
+import de.fxworld.basel.api.IRole;
 
 @Entity(name = "basel_group")
 public class Group extends AbstractEntity<Group> implements IGroup {
@@ -37,7 +39,7 @@ public class Group extends AbstractEntity<Group> implements IGroup {
         inverseJoinColumns=
             @JoinColumn(name="role_id", referencedColumnName="id")
         )
-	private List<User> roles = new ArrayList<User>();
+	private List<Role> roles = new ArrayList<Role>();
 	
 	public Group() {		
 	}
@@ -58,10 +60,14 @@ public class Group extends AbstractEntity<Group> implements IGroup {
 	}
 	
 	@Override
-	public void update(Group group) {
-		super.update(group);
+	public void update(IEntity entity) {
+		super.update(entity);
 				
-		setDescription(group.getDescription());
+		if (entity instanceof IGroup) {
+			IGroup group = (IGroup) entity;
+			
+			setDescription(group.getDescription());
+		}
 		// TODO update roles and members
 	}
 
@@ -87,6 +93,11 @@ public class Group extends AbstractEntity<Group> implements IGroup {
 	@Override
 	public List<User> getMembers() {
 		return members;
+	}
+	
+	@Override
+	public Collection<? extends IRole> getRoles() {
+		return roles;
 	}
 
 	/* (non-Javadoc)
@@ -128,14 +139,14 @@ public class Group extends AbstractEntity<Group> implements IGroup {
 			if (other.members != null) {
 				return false;
 			}
-		} else if (!BagComparator.equals(members, other.members)) {
+		} else if (!equals(members, other.members)) {
 			return false;
 		}
 		if (roles == null) {
 			if (other.roles != null) {
 				return false;
 			}
-		} else if (!BagComparator.equals(roles, other.roles)) {
+		} else if (!equals(roles, other.roles)) {
 			return false;
 		}
 		return true;

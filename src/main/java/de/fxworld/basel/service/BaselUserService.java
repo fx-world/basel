@@ -2,6 +2,8 @@ package de.fxworld.basel.service;
 
 import javax.inject.Inject;
 
+import org.springframework.stereotype.Service;
+
 import de.fxworld.basel.api.IBaselUserService;
 import de.fxworld.basel.api.IGroup;
 import de.fxworld.basel.api.IRole;
@@ -13,6 +15,7 @@ import de.fxworld.basel.data.IUserRepository;
 import de.fxworld.basel.data.Role;
 import de.fxworld.basel.data.User;
 
+@Service
 public class BaselUserService implements IBaselUserService {
 
 	private IUserRepository  userRepository;
@@ -42,6 +45,11 @@ public class BaselUserService implements IBaselUserService {
 	}
 	
 	@Override
+	public IUser getUserByName(String name) {	
+		return userRepository.findByName(name);
+	}
+	
+	@Override
 	public IUser saveUser(IUser user) {
 		return userRepository.save((User) user);
 	}
@@ -59,6 +67,11 @@ public class BaselUserService implements IBaselUserService {
 	@Override
 	public IGroup getGroup(long id) {
 		return groupRepository.findOne(id);
+	}
+	
+	@Override
+	public IGroup getGroupByName(String name) {		
+		return groupRepository.findByName(name);
 	}
 
 	@Override
@@ -79,6 +92,11 @@ public class BaselUserService implements IBaselUserService {
 	@Override
 	public IRole getRole(long id) {
 		return roleRepository.findOne(id);
+	}
+
+	@Override
+	public IRole getRoleByName(String name) {
+		return roleRepository.findByName(name);
 	}
 
 	@Override
@@ -111,5 +129,4 @@ public class BaselUserService implements IBaselUserService {
 
 		return result;
 	}
-
 }

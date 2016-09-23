@@ -1,6 +1,7 @@
 package de.fxworld.basel.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,8 +12,9 @@ import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.fxworld.basel.api.IEntity;
+import de.fxworld.basel.api.IGroup;
 import de.fxworld.basel.api.IUser;
-import de.fxworld.basel.utils.BagComparator;
 
 @Entity(name = "basel_user")
 public class User extends AbstractEntity<User> implements IUser {
@@ -23,6 +25,16 @@ public class User extends AbstractEntity<User> implements IUser {
 	private String firstName;
 	private String lastName;
 
+	@JsonIgnore
+	@ManyToMany() //fetch=FetchType.EAGER
+	@JoinTable(name="basel_user_in_group",
+		joinColumns=
+			    @JoinColumn(name="user_id", referencedColumnName="id"),
+        inverseJoinColumns=
+        		@JoinColumn(name="group_id", referencedColumnName="id")
+        )
+	private List<Group> groups = new ArrayList<Group>();
+	
 	@JsonIgnore
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name="basel_user_role",
@@ -46,18 +58,22 @@ public class User extends AbstractEntity<User> implements IUser {
 	}
 	
 	@Override
-	public void update(User user) {
-		super.update(user);
-		
-		setPassword(user.getPassword());
-		setFirstName(user.getFirstName());
-		setLastName(user.getLastName());
+	public void update(IEntity entity) {
+		super.update(entity);
+				
+		if (entity instanceof IUser) {
+			IUser user = (IUser) entity;
+			
+			setPassword(user.getPassword());
+			setFirstName(user.getFirstName());
+			setLastName(user.getLastName());
 
-		List<Role> tempRoles = new ArrayList<Role>();
-		
-		tempRoles.addAll(user.roles);
-		roles.clear();
-		roles.addAll(tempRoles);
+//			List<Role> tempRoles = new ArrayList<Role>();
+//			
+//			tempRoles.addAll(user.getRoles());
+//			roles.clear();
+//			roles.addAll(tempRoles);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -133,6 +149,14 @@ public class User extends AbstractEntity<User> implements IUser {
 	public List<Role> getRoles() {
 		return roles;
 	}
+	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IUser#getGroups()
+	 */
+	@Override
+	public Collection<Group> getGroups() {		
+		return groups;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -196,7 +220,7 @@ public class User extends AbstractEntity<User> implements IUser {
 			if (other.roles != null) {
 				return false;
 			}
-		} else if (!BagComparator.equals(roles, other.roles)) {			
+		} else if (!equals(roles, other.roles)) {			
 			return false;
 		}
 		return true;

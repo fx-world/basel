@@ -1,5 +1,7 @@
 package de.fxworld.basel.api;
 
+import java.util.Collection;
+
 public interface IUser extends IEntity {
 
 	String getPassword();
@@ -18,6 +20,8 @@ public interface IUser extends IEntity {
 
 	void setLastName(String lastName);
 
-	Iterable<? extends IRole> getRoles();
+	Collection<? extends IRole> getRoles();
+
+	Collection<? extends IGroup> getGroups();
 
 }

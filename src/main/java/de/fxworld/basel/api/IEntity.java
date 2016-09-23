@@ -2,9 +2,13 @@ package de.fxworld.basel.api;
 
 public interface IEntity {
 
-	long getId();
+	public long getId();
 	
-	String getName();
+	public String getName();
 
-	void setName(String name);
+	public void setName(String name);
+	
+	public boolean isValid();
+
+	public void update(IEntity newEntity);
 }

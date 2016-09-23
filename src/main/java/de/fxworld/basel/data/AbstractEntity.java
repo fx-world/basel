@@ -1,5 +1,7 @@
 package de.fxworld.basel.data;
 
+import java.util.List;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,6 +31,7 @@ public abstract class AbstractEntity<T extends AbstractEntity> implements IEntit
 		setName(name);
 	}
 
+	@Override
 	public boolean isValid() {
 		boolean result = true;
 		
@@ -38,7 +41,8 @@ public abstract class AbstractEntity<T extends AbstractEntity> implements IEntit
 		return result;
 	}
 
-	public void update(T entity) {
+	@Override
+	public void update(IEntity entity) {
 		setName(entity.getName());
 	}
 	
@@ -63,6 +67,28 @@ public abstract class AbstractEntity<T extends AbstractEntity> implements IEntit
 	public String toString() {
 		return name;
 	}
+	
+	protected <U,V> boolean equals(List<U> a, List<V> b) {
+		boolean result = true;
+		
+		if ((a != null) && (b != null)) {
+			result = a.size() == b.size();
+			
+			if (result) {
+				for (int i = 0; (i < a.size()) && result; i++) {
+					result &= a.equals(b);					
+				}
+			}			
+			
+		} else if ((a != null) && (b == null)) {
+			result = false;
+			
+		} else if ((a == null) && (b != null)) {
+			result = false;
+		}
+		
+		return result;
+	}	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

@@ -11,7 +11,9 @@ public class Application {
 
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 	
-    public static void main(String[] args) {
+    @SuppressWarnings("unused")
+	public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
-    }    
+        log.info("Thank you for using Basel");
+    }
 }

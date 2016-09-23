@@ -2,6 +2,8 @@ package de.fxworld.basel.data;
 
 import javax.persistence.Entity;
 
+import de.fxworld.basel.api.IEntity;
+import de.fxworld.basel.api.IGroup;
 import de.fxworld.basel.api.IRole;
 
 @Entity(name = "basel_role")
@@ -22,10 +24,15 @@ public class Role extends AbstractEntity<Role> implements IRole {
 	}
 	
 	@Override
-	public void update(Role role) {
-		super.update(role);
-		
-		setDescription(role.getDescription());
+	public void update(IEntity entity) {
+		super.update(entity);
+				
+		if (entity instanceof IRole) {
+			IRole role = (IRole) entity;
+			
+			setDescription(role.getDescription());
+		}
+		// TODO update roles and members
 	}
 
 	/* (non-Javadoc)
