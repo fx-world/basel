@@ -1,5 +1,7 @@
 package de.fxworld.basel.api;
 
+import java.util.List;
+
 public interface IBaselUserService {
 	
 	///////////////////////////////////////////////////////////////////
@@ -7,7 +9,7 @@ public interface IBaselUserService {
 
 	public IUser createUser(String name);
 	
-	public Iterable<? extends IUser> getUsers();
+	public List<IUser> getUsers();
 	
 	public IUser getUser(long id);
 	
@@ -22,7 +24,7 @@ public interface IBaselUserService {
 	
 	public IGroup createGroup(String name);
 	
-	public Iterable<? extends IGroup> getGroups();
+	public List<IGroup> getGroups();
 	
 	public IGroup getGroup(long id);
 	
@@ -37,7 +39,7 @@ public interface IBaselUserService {
 	
 	public IRole createRole(String name);
 	
-	public Iterable<? extends IRole> getRoles();
+	public List<IRole> getRoles();
 	
 	public IRole getRole(long id);
 	

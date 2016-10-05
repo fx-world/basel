@@ -25,7 +25,10 @@ public class VaadinUI extends UI {
 		MenuLayout menuLayout = new MenuLayout(this);        
         setContent(menuLayout);
         
-        menuLayout.addMenu(UsersView.VIEW_NAME, "Users");
+        menuLayout.addMenu(DashboardView.VIEW_NAME, "Home");
+        menuLayout.addMenu(UserListView.VIEW_NAME, "Users");
+        menuLayout.addMenu(GroupListView.VIEW_NAME, "Groups");
+        menuLayout.addMenu(RoleListView.VIEW_NAME, "Roles");
         menuLayout.getNavigator().addProvider(viewProvider);        
 	}
 }

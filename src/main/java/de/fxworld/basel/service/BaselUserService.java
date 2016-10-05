@@ -1,5 +1,8 @@
 package de.fxworld.basel.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
@@ -35,8 +38,12 @@ public class BaselUserService implements IBaselUserService {
 	}
 	
 	@Override
-	public Iterable<? extends IUser> getUsers() {
-		return userRepository.findAll();
+	public List<IUser> getUsers() {
+		List<IUser> result = new ArrayList<>();
+		
+		userRepository.findAll().forEach(result::add);
+		
+		return result;
 	}
 
 	@Override
@@ -60,8 +67,12 @@ public class BaselUserService implements IBaselUserService {
 	}
 
 	@Override
-	public Iterable<? extends IGroup> getGroups() {
-		return groupRepository.findAll();
+	public List<IGroup> getGroups() {
+		List<IGroup> result = new ArrayList<>();
+		
+		groupRepository.findAll().forEach(result::add);
+		
+		return result;
 	}
 
 	@Override
@@ -85,8 +96,12 @@ public class BaselUserService implements IBaselUserService {
 	}
 
 	@Override
-	public Iterable<? extends IRole> getRoles() {
-		return roleRepository.findAll();
+	public List<IRole> getRoles() {
+		List<IRole> result = new ArrayList<>();
+		
+		roleRepository.findAll().forEach(result::add);
+		
+		return result;
 	}
 
 	@Override
