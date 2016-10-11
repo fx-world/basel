@@ -78,6 +78,7 @@
 	
 	<dependencyManagement>
 	    <dependencies>
+	    	<!-- This removes an ugly bug in grids -->
 	        <dependency>
 	            <groupId>com.vaadin</groupId>
 	            <artifactId>vaadin-bom</artifactId>

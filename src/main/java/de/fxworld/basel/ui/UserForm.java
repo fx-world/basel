@@ -10,28 +10,17 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 
-import de.fxworld.basel.data.User;
+import de.fxworld.basel.api.IUser;
 
-public class UserForm extends AbstractForm<User> {
+public class UserForm extends AbstractForm<IUser> {
 
 	TextField     username = new MTextField("Name");
 	PasswordField password = new MPasswordField("Password");
     TextField     email    = new MTextField("E-Mail");   
-    
-    public UserForm(User user) {
-    	setSizeUndefined();    	
     	
-    	if (user != null) {
-    		setEntity(user);
-    		setModalWindowTitle("Edit User");
-    	} else {
-    		setEntity(new User());
-    		setModalWindowTitle("New User");
-    	}
-    }
-	
 	public UserForm() {
-		this(null);
+		setSizeUndefined();
+		setModalWindowTitle("Edit User");
 	}
 
 	@Override
