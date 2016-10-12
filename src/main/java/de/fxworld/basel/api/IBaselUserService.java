@@ -9,7 +9,7 @@ public interface IBaselUserService {
 	
 	public Iterable<? extends IUser> getUsers();
 	
-	public IUser getUser(long id);
+	public IUser getUser(String id);
 	
 	public IUser getUserByName(String name);
 	
@@ -24,7 +24,7 @@ public interface IBaselUserService {
 	
 	public Iterable<? extends IGroup> getGroups();
 	
-	public IGroup getGroup(long id);
+	public IGroup getGroup(String id);
 	
 	public IGroup getGroupByName(String name);
 	
@@ -39,7 +39,7 @@ public interface IBaselUserService {
 	
 	public Iterable<? extends IRole> getRoles();
 	
-	public IRole getRole(long id);
+	public IRole getRole(String id);
 	
 	public IRole getRoleByName(String name);
 	

@@ -2,7 +2,7 @@ package de.fxworld.basel.api;
 
 public interface IEntity {
 
-	public long getId();
+	public String getId();
 	
 	public String getName();
 

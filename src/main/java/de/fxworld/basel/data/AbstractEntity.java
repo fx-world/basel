@@ -3,10 +3,11 @@ package de.fxworld.basel.data;
 import java.util.List;
 
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,9 +18,11 @@ import de.fxworld.basel.api.IEntity;
 public abstract class AbstractEntity<T extends AbstractEntity> implements IEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(generator = "system-uuid")
+	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	@JsonIgnore
-	private long id;
+	private String id;
 	
 	@NotNull
 	private String name;
@@ -51,7 +54,7 @@ public abstract class AbstractEntity<T extends AbstractEntity> implements IEntit
 	 * @see de.fxworld.basel.data.IGroup#getId()
 	 */
 	@Override
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -88,7 +91,7 @@ public abstract class AbstractEntity<T extends AbstractEntity> implements IEntit
 		}
 		
 		return result;
-	}	
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -97,8 +100,7 @@ public abstract class AbstractEntity<T extends AbstractEntity> implements IEntit
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -117,17 +119,16 @@ public abstract class AbstractEntity<T extends AbstractEntity> implements IEntit
 			return false;
 		}
 		AbstractEntity other = (AbstractEntity) obj;
-		if (id != other.id) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!name.equals(other.name)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		return true;
-	}
+	}	
+
+	
 	
 }
