@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public interface IEntity extends Serializable {
 
-	public long getId();
+	public String getId();
 	
 	public String getName();
 

@@ -75,7 +75,7 @@ public class BaselUserServiceTest {
 
 	@Test
 	public void testGetUser() {
-		assertNull(service.getUser(0));
+		assertNull(service.getUser("something"));
 		
 		IUser user = service.createUser("fx");
 		assertEquals("fx", user.getName());
@@ -133,7 +133,7 @@ public class BaselUserServiceTest {
 
 	@Test
 	public void testGetGroup() {
-		assertNull(service.getGroup(0));
+		assertNull(service.getGroup("something"));
 		
 		IGroup group = service.createGroup("friends");
 		assertEquals("friends", group.getName());
@@ -191,7 +191,7 @@ public class BaselUserServiceTest {
 
 	@Test
 	public void testGetRole() {
-		assertNull(service.getRole(0));
+		assertNull(service.getRole("something"));
 		
 		IRole role = service.createRole("admin");
 		assertEquals("admin", role.getName());

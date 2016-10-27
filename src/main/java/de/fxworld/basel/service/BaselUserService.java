@@ -47,7 +47,7 @@ public class BaselUserService implements IBaselUserService {
 	}
 
 	@Override
-	public IUser getUser(long id) {		
+	public IUser getUser(String id) {		
 		return userRepository.findOne(id);
 	}
 	
@@ -76,7 +76,7 @@ public class BaselUserService implements IBaselUserService {
 	}
 
 	@Override
-	public IGroup getGroup(long id) {
+	public IGroup getGroup(String id) {
 		return groupRepository.findOne(id);
 	}
 	
@@ -105,7 +105,7 @@ public class BaselUserService implements IBaselUserService {
 	}
 
 	@Override
-	public IRole getRole(long id) {
+	public IRole getRole(String id) {
 		return roleRepository.findOne(id);
 	}
 

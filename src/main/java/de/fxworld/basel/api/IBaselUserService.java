@@ -11,7 +11,7 @@ public interface IBaselUserService {
 	
 	public List<IUser> getUsers();
 	
-	public IUser getUser(long id);
+	public IUser getUser(String id);
 	
 	public IUser getUserByName(String name);
 	
@@ -26,7 +26,7 @@ public interface IBaselUserService {
 	
 	public List<IGroup> getGroups();
 	
-	public IGroup getGroup(long id);
+	public IGroup getGroup(String id);
 	
 	public IGroup getGroupByName(String name);
 	
@@ -41,7 +41,7 @@ public interface IBaselUserService {
 	
 	public List<IRole> getRoles();
 	
-	public IRole getRole(long id);
+	public IRole getRole(String id);
 	
 	public IRole getRoleByName(String name);
 	
