@@ -20,7 +20,7 @@ public class GroupListView extends EntityView<IGroup> {
 	protected IBaselUserService service;
 	
 	public GroupListView() {
-		super(IGroup.class, new GroupForm(), new String[] {"name", "description"});
+		super(IGroup.class, new GroupForm(), new String[] {"name", "description", "members", "roles"});
 		
 		setSaveHandler(g -> service.saveGroup(g));
 	}

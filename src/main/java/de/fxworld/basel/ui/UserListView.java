@@ -28,7 +28,7 @@ public class UserListView extends EntityView<IUser> {
 	protected IUserRepository repo;
 	
 	public UserListView() {
-		super(IUser.class, new UserForm(), new String[] {"name", "firstName", "lastName", "email", "members", "roles"});
+		super(IUser.class, new UserForm(), new String[] {"name", "firstName", "lastName", "email", "groups", "roles"});
 		
 		setSaveHandler(u -> service.saveUser(u));
 	}

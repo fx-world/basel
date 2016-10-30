@@ -92,11 +92,13 @@ public class Group extends AbstractEntity<Group> implements IGroup {
 	 */
 	@Override
 	public List<User> getMembers() {
+		members.isEmpty();
 		return members;
 	}
 	
 	@Override
 	public Collection<? extends IRole> getRoles() {
+		roles.isEmpty();
 		return roles;
 	}
 }

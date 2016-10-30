@@ -13,7 +13,6 @@ import javax.persistence.ManyToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.fxworld.basel.api.IEntity;
-import de.fxworld.basel.api.IGroup;
 import de.fxworld.basel.api.IUser;
 
 @Entity(name = "basel_user")
@@ -67,12 +66,6 @@ public class User extends AbstractEntity<User> implements IUser {
 			setPassword(user.getPassword());
 			setFirstName(user.getFirstName());
 			setLastName(user.getLastName());
-
-//			List<Role> tempRoles = new ArrayList<Role>();
-//			
-//			tempRoles.addAll(user.getRoles());
-//			roles.clear();
-//			roles.addAll(tempRoles);
 		}
 	}
 	
@@ -147,6 +140,7 @@ public class User extends AbstractEntity<User> implements IUser {
 	 */
 	@Override
 	public List<Role> getRoles() {
+		roles.isEmpty(); // to force EclipseLink to resolve it
 		return roles;
 	}
 	
@@ -154,7 +148,8 @@ public class User extends AbstractEntity<User> implements IUser {
 	 * @see de.fxworld.basel.api.IUser#getGroups()
 	 */
 	@Override
-	public Collection<Group> getGroups() {		
+	public Collection<Group> getGroups() {
+		groups.isEmpty(); // to force EclipseLink to resolve it
 		return groups;
 	}
 }
