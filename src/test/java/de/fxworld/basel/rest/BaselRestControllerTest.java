@@ -4,6 +4,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -143,8 +146,6 @@ public class BaselRestControllerTest {
 		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user/fx/groups").accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(content().json(new JSONArray().toString()));
-		
-		
 		
 		Group friends = new Group("friends");
 		//friends.getMembers().add(fx);

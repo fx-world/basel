@@ -1,6 +1,8 @@
 package de.fxworld.basel.data;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -127,8 +129,5 @@ public abstract class AbstractEntity<T extends AbstractEntity> implements IEntit
 			return false;
 		}
 		return true;
-	}	
-
-	
-	
+	}		
 }

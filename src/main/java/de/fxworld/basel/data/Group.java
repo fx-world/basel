@@ -2,7 +2,9 @@ package de.fxworld.basel.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.fxworld.basel.api.IEntity;
 import de.fxworld.basel.api.IGroup;
 import de.fxworld.basel.api.IRole;
+import de.fxworld.basel.api.IUser;
 
 @Entity(name = "basel_group")
 public class Group extends AbstractEntity<Group> implements IGroup {
@@ -22,24 +25,24 @@ public class Group extends AbstractEntity<Group> implements IGroup {
 	private String description;
 	
 	@JsonIgnore
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER, targetEntity=User.class)
 	@JoinTable(name="basel_user_in_group",
 		joinColumns=
             @JoinColumn(name="group_id", referencedColumnName="id"),
         inverseJoinColumns=
             @JoinColumn(name="user_id", referencedColumnName="id")
         )
-	private List<User> members = new ArrayList<User>();
+	private Set<IUser> members = new HashSet<IUser>();
 	
 	@JsonIgnore
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER, targetEntity=Role.class)
 	@JoinTable(name="basel_group_role",
 		joinColumns=
             @JoinColumn(name="group_id", referencedColumnName="id"),
         inverseJoinColumns=
             @JoinColumn(name="role_id", referencedColumnName="id")
         )
-	private List<Role> roles = new ArrayList<Role>();
+	private Set<IRole> roles = new HashSet<IRole>();
 	
 	public Group() {		
 	}
@@ -91,14 +94,33 @@ public class Group extends AbstractEntity<Group> implements IGroup {
 	 * @see de.fxworld.basel.data.IGroup#getMembers()
 	 */
 	@Override
-	public List<User> getMembers() {
+	public Set<IUser> getMembers() {
 		members.isEmpty();
 		return members;
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IGroup#setMembers(java.util.Set)
+	 */
 	@Override
-	public Collection<? extends IRole> getRoles() {
+	public void setMembers(Set<IUser> members) {		
+		this.members = members;
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IGroup#getRoles()
+	 */
+	@Override
+	public Set<IRole> getRoles() {
 		roles.isEmpty();
 		return roles;
+	}
+
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IGroup#setRoles(java.util.Set)
+	 */
+	@Override
+	public void setRoles(Set<IRole> roles) {
+		this.roles = roles;
 	}
 }

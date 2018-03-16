@@ -1,8 +1,7 @@
 package de.fxworld.basel.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +12,8 @@ import javax.persistence.ManyToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.fxworld.basel.api.IEntity;
+import de.fxworld.basel.api.IGroup;
+import de.fxworld.basel.api.IRole;
 import de.fxworld.basel.api.IUser;
 
 @Entity(name = "basel_user")
@@ -25,24 +26,24 @@ public class User extends AbstractEntity<User> implements IUser {
 	private String lastName;
 
 	@JsonIgnore
-	@ManyToMany() //fetch=FetchType.EAGER
+	@ManyToMany(targetEntity=Group.class) //fetch=FetchType.EAGER
 	@JoinTable(name="basel_user_in_group",
 		joinColumns=
 			    @JoinColumn(name="user_id", referencedColumnName="id"),
         inverseJoinColumns=
         		@JoinColumn(name="group_id", referencedColumnName="id")
         )
-	private List<Group> groups = new ArrayList<Group>();
+	private Set<IGroup> groups = new HashSet<IGroup>();
 	
 	@JsonIgnore
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER, targetEntity=Role.class)
 	@JoinTable(name="basel_user_role",
 		joinColumns=
             @JoinColumn(name="user_id", referencedColumnName="id"),
         inverseJoinColumns=
             @JoinColumn(name="role_id", referencedColumnName="id")
         )
-	private List<Role> roles = new ArrayList<Role>();
+	private Set<IRole> roles = new HashSet<IRole>();
 	
 	public User() {
 	}
@@ -139,16 +140,24 @@ public class User extends AbstractEntity<User> implements IUser {
 	 * @see de.fxworld.basel.data.IUser#getRoles()
 	 */
 	@Override
-	public List<Role> getRoles() {
+	public Set<IRole> getRoles() {
 		roles.isEmpty(); // to force EclipseLink to resolve it
 		return roles;
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IUser#setRoles(java.util.Set)
+	 */
+	@Override
+	public void setRoles(Set<IRole> roles) {
+		this.roles = roles;
 	}
 	
 	/* (non-Javadoc)
 	 * @see de.fxworld.basel.api.IUser#getGroups()
 	 */
 	@Override
-	public Collection<Group> getGroups() {
+	public Set<IGroup> getGroups() {
 		groups.isEmpty(); // to force EclipseLink to resolve it
 		return groups;
 	}
