@@ -40,16 +40,17 @@ public class UserListView extends EntityView<IUser> {
 	protected List<IUser> getEntities() {
 		List<IUser> result = service.getUsers();
 
-		//result = StreamSupport.stream(repo.findAll().spliterator(), false).collect(Collectors.toList());
-		
-		//log.info(String.format("returning %d entities of type %s", result.size(), User.class));
-		
 		return result;
 	}
 
 	@Override
 	protected IUser createNewEntity() {		
 		return service.createUser(null);		
+	}
+
+	@Override
+	protected void deleteEntity(IUser entity) {
+		service.deleteUser(entity);
 	}
 
 }

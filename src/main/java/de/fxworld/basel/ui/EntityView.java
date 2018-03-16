@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.PostConstruct;
 
+import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.viritin.form.AbstractForm;
 
 import com.vaadin.data.util.BeanItemContainer;
@@ -17,7 +18,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public abstract class EntityView<T> extends VerticalLayout implements View {
+import de.fxworld.basel.api.IEntity;
+
+public abstract class EntityView<T extends IEntity> extends VerticalLayout implements View {
 
 	Class<T> clazz;
 	AbstractForm<T> form;
@@ -31,8 +34,6 @@ public abstract class EntityView<T> extends VerticalLayout implements View {
 	Button deleteButton;
 	
 	Window editWindow;
-	
-	
 	
 	public EntityView(Class<T> clazz, AbstractForm<T> form, String[] columnNames) {
 		this.clazz       = clazz;
@@ -93,7 +94,11 @@ public abstract class EntityView<T> extends VerticalLayout implements View {
 			@SuppressWarnings("unchecked")
 			T entity = (T) grid.getSelectedRow();
 			editEntity(entity);
-			
+		});
+		deleteButton.addClickListener(e -> {
+			@SuppressWarnings("unchecked")
+			T entity = (T) grid.getSelectedRow();
+			deleteEntityQuestion(entity);
 		});
 
 		// Initialize listing
@@ -120,7 +125,20 @@ public abstract class EntityView<T> extends VerticalLayout implements View {
         	listCustomers(null);
         	form.closePopup();
         });
-}
+	}
+	
+	protected void deleteEntityQuestion(T entity) {
+		ConfirmDialog dialog = ConfirmDialog.show(getUI(), String.format("Should %s be deleted?", entity.getName()), new ConfirmDialog.Listener() {
+
+            public void onClose(ConfirmDialog dialog) {
+                if (dialog.isConfirmed()) {
+                	deleteEntity(entity);
+                }
+            }
+        });
+	}
+	
+	protected abstract void deleteEntity(T entity);
 	
 	protected abstract T createNewEntity();
 

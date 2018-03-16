@@ -40,8 +40,10 @@ public class UserForm extends AbstractForm<IUser> {
 		
 		setSizeUndefined();
 		setModalWindowTitle("Edit User");
-		roles.setConverter(new SetConverter());		
+//		roles.setConverter(new SetConverter());		
 		roles.setContainerDataSource(UIHelper.createRolesContainer(availableRoles));
+		roles.setLeftColumnCaption("Available");
+		roles.setRightColumnCaption("Applied");
 	}
 
 	@Override

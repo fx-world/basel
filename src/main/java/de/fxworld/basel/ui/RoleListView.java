@@ -37,4 +37,9 @@ public class RoleListView extends EntityView<IRole> {
 	protected IRole createNewEntity() {
 		return service.createRole(null);
 	}
+
+	@Override
+	protected void deleteEntity(IRole entity) {
+		service.deleteRole(entity);
+	}
 }

@@ -39,11 +39,15 @@ public class GroupForm extends AbstractForm<IGroup> {
     		setModalWindowTitle("New Group");
     	}
     	
-    	members.setConverter(new SetConverter());		
+//    	members.setConverter(new SetConverter());		
     	members.setContainerDataSource(UIHelper.createUsersContainer(availableUsers));
+    	members.setLeftColumnCaption("Available");
+    	members.setRightColumnCaption("Selected");
     	
-    	roles.setConverter(new SetConverter());		
+//    	roles.setConverter(new SetConverter());		
 		roles.setContainerDataSource(UIHelper.createRolesContainer(availableRoles));
+		roles.setLeftColumnCaption("Available");
+		roles.setRightColumnCaption("Applied");
     }
 
 	@Override

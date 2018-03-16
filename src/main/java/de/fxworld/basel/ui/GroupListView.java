@@ -36,4 +36,9 @@ public class GroupListView extends EntityView<IGroup> {
 		return service.createGroup(null);
 	}
 
+	@Override
+	protected void deleteEntity(IGroup entity) {
+		service.deleteGroup(entity);
+	}
+
 }
