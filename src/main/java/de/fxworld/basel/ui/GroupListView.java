@@ -16,11 +16,12 @@ public class GroupListView extends EntityView<IGroup> {
 
 	public static final String VIEW_NAME = "groups";
 	
-	@Autowired
 	protected IBaselUserService service;
 	
-	public GroupListView() {
-		super(IGroup.class, new GroupForm(), new String[] {"name", "description", "members", "roles"});
+	public GroupListView(@Autowired IBaselUserService service) {
+		super(IGroup.class, new GroupForm(service, null), new String[] {"name", "description", "members", "roles"});
+		
+		this.service = service;
 		
 		setSaveHandler(g -> service.saveGroup(g));
 	}

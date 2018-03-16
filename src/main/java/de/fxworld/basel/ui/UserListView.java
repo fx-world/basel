@@ -2,6 +2,8 @@ package de.fxworld.basel.ui;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +23,15 @@ public class UserListView extends EntityView<IUser> {
 	
 	public static final String VIEW_NAME = "users";
 	
-	@Autowired
 	protected IBaselUserService service;
 	
-	@Autowired
 	protected IUserRepository repo;
 	
-	public UserListView() {
-		super(IUser.class, new UserForm(), new String[] {"name", "firstName", "lastName", "email", "groups", "roles"});
+	public UserListView(@Autowired IBaselUserService service, @Autowired IUserRepository repo) {
+		super(IUser.class, new UserForm(service), new String[] {"name", "firstName", "lastName", "email", "groups", "roles"});
+
+		this.service = service;
+		this.repo    = repo;
 		
 		setSaveHandler(u -> service.saveUser(u));
 	}
