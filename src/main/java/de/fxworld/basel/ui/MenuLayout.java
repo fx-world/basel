@@ -58,7 +58,6 @@ public class MenuLayout extends VerticalLayout {
 	}
 
 	public void addMenu(String viewName, String name) {
-        //navigator.addView(viewName, view);
 		menu.addItem(name, (MenuItem) -> navigator.navigateTo(viewName));	
 	}
 

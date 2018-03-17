@@ -12,15 +12,17 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.spring.access.ViewInstanceAccessControl;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import de.fxworld.basel.api.IEntity;
 
-public abstract class EntityView<T extends IEntity> extends VerticalLayout implements View {
+public abstract class EntityView<T extends IEntity> extends VerticalLayout implements View, ViewInstanceAccessControl  {
 
 	Class<T> clazz;
 	AbstractForm<T> form;
@@ -157,4 +159,13 @@ public abstract class EntityView<T extends IEntity> extends VerticalLayout imple
 	
 	protected abstract List<T> getEntities();
 
+//	@Override
+//	public boolean isAccessGranted(UI ui, String beanName) {
+//		return true;
+//	}
+	@Override
+	public boolean isAccessGranted(UI ui, String beanName, View view) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.UI;
 
 import de.fxworld.basel.api.IBaselUserService;
 import de.fxworld.basel.api.IGroup;
@@ -40,5 +42,4 @@ public class GroupListView extends EntityView<IGroup> {
 	protected void deleteEntity(IGroup entity) {
 		service.deleteGroup(entity);
 	}
-
 }

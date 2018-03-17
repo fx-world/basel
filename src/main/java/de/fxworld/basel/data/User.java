@@ -52,11 +52,17 @@ public class User extends AbstractEntity<User> implements IUser {
 		super(username);
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.data.AbstractEntity#isValid()
+	 */
 	@Override
 	public boolean isValid() {		
 		return super.isValid();
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.data.AbstractEntity#update(de.fxworld.basel.api.IEntity)
+	 */
 	@Override
 	public void update(IEntity entity) {
 		super.update(entity);
@@ -68,6 +74,21 @@ public class User extends AbstractEntity<User> implements IUser {
 			setFirstName(user.getFirstName());
 			setLastName(user.getLastName());
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IUser#getAllRoles()
+	 */
+	@Override
+	public Set<IRole> getAllRoles() {
+		Set<IRole> result = new HashSet<>();
+		
+		result.addAll(getRoles());
+		for (IGroup group : getGroups()) {
+			result.addAll(group.getRoles());
+		}
+		
+		return result;
 	}
 	
 	/* (non-Javadoc)
@@ -160,5 +181,5 @@ public class User extends AbstractEntity<User> implements IUser {
 	public Set<IGroup> getGroups() {
 		groups.isEmpty(); // to force EclipseLink to resolve it
 		return groups;
-	}
+	}	
 }

@@ -26,4 +26,6 @@ public interface IUser extends IEntity {
 	
 	Set<IGroup> getGroups();
 
+	Set<IRole> getAllRoles();
+
 }
