@@ -1,5 +1,8 @@
 package de.fxworld.basel.ui;
 
+import org.vaadin.jouni.animator.Animator;
+import org.vaadin.jouni.dom.client.Css;
+
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Resource;
@@ -52,6 +55,7 @@ public class LoginForm extends VerticalLayout {
             password.setValue("");
             if (!callback.login(username.getValue(), pword)) {
                 Notification.show("Login failed");
+                Animator.animate(subWindow, new Css().rotate(360)).duration(500);
                 username.focus();
             } else {
             	subWindow.close();

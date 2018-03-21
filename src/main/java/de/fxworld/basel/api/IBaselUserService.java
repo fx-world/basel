@@ -2,13 +2,18 @@ package de.fxworld.basel.api;
 
 import java.util.List;
 
+import org.springframework.security.access.annotation.Secured;
+
+import de.fxworld.basel.data.DataInitializer;
+
 public interface IBaselUserService {
 	
 	///////////////////////////////////////////////////////////////////
 	// Users
 
 	public IUser createUser(String name);
-	
+
+	@Secured("ULTRA_ADMIN")
 	public List<IUser> getUsers();
 	
 	public IUser getUser(String id);

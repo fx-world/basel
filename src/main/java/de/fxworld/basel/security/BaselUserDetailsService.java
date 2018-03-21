@@ -1,4 +1,4 @@
-package de.fxworld.basel.service;
+package de.fxworld.basel.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import de.fxworld.basel.api.IRole;
 import de.fxworld.basel.api.IUser;
+import de.fxworld.basel.service.BaselUserService;
 
 @Service
 public class BaselUserDetailsService implements UserDetailsService {
@@ -44,8 +45,8 @@ public class BaselUserDetailsService implements UserDetailsService {
 		public Collection<? extends GrantedAuthority> getAuthorities() {
 			final List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 	        
-			for (final IRole privilege : user.getAllRoles()) {
-	            authorities.add(new SimpleGrantedAuthority(privilege.getName()));
+			for (final IRole role : user.getAllRoles()) {
+	            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
 	        }
 			
 	        return authorities;

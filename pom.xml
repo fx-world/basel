@@ -81,6 +81,11 @@
     		<version>1.0.0</version>
 		</dependency>
 		<dependency>
+   			<groupId>org.vaadin.addons</groupId>
+   			<artifactId>animator</artifactId>
+   			<version>3.0.0</version>
+		</dependency>
+		<dependency>
    			<groupId>org.vaadin</groupId>
    			<artifactId>viritin</artifactId>
    			<version>1.57</version>

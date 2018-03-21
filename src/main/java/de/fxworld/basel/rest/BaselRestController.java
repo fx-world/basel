@@ -6,11 +6,15 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 
+import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +36,8 @@ import de.fxworld.basel.data.User;
 @RequestMapping("/api/v1")
 public class BaselRestController {
 
+	// error handling https://gist.github.com/jonikarppinen/662c38fb57a23de61c8b
+	
 	protected IBaselUserService service;
 		
 	@Inject
@@ -43,6 +49,7 @@ public class BaselRestController {
 	// Users
 	
 	@RequestMapping(path="/user", method = RequestMethod.GET)
+	//@Secured("ROLE_ADMIN")
     public List<IUser> getUsers() {	
         return createList(service.getUsers());
     }

@@ -9,14 +9,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.UI;
 
-//@EnableVaadin
-@SpringUI
+@SpringUI(path="ui")
 @Theme("valo")
 public class VaadinUI extends UI {
 	
@@ -26,13 +24,13 @@ public class VaadinUI extends UI {
 	private static final long serialVersionUID = 824882934600464374L;
 
 	@Autowired
-	private SpringViewProvider viewProvider;
+	protected SpringViewProvider viewProvider;
 	
 	@Autowired
-	AuthenticationManager authenticationManager;
+	protected AuthenticationManager authenticationManager;
 	
 	@Autowired
-	ErrorView errorView;
+	protected ErrorView errorView;
 	
 	@Override
 	protected void init(VaadinRequest request) {
@@ -57,18 +55,21 @@ public class VaadinUI extends UI {
 	
 	 private boolean login(String username, String password) {
 	        try {
-	            Authentication token = authenticationManager
-	                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+	            Authentication token = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+	            
 	            // Reinitialize the session to protect against session fixation attacks. This does not work
 	            // with websocket communication.
 	            VaadinService.reinitializeSession(VaadinService.getCurrentRequest());
 	            SecurityContextHolder.getContext().setAuthentication(token);
+	            
 	            // Now when the session is reinitialized, we can enable websocket communication. Or we could have just
 	            // used WEBSOCKET_XHR and skipped this step completely.
 	            getPushConfiguration().setTransport(Transport.WEBSOCKET);
 	            //getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
+	            
 	            // Show the main UI
 	            showMain();
+	            
 	            return true;
 	        } catch (AuthenticationException ex) {
 	            return false;
