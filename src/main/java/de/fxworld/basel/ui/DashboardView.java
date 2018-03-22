@@ -48,7 +48,7 @@ public class DashboardView extends VerticalLayout implements View {
 			log.warn(auth.toString());
 		}
 		
-		list.addItems(authorities);
+		list.setItems(authorities);
 		list.setSizeFull();
 		
 		this.addComponent(list);

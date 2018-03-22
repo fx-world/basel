@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.viritin.form.AbstractForm;
 
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
@@ -46,10 +46,10 @@ public abstract class EntityView<T extends IEntity> extends VerticalLayout imple
 	@PostConstruct
 	protected void init() {
 		
-		grid         = new Grid();
-		addButton    = new Button("New", FontAwesome.PLUS_SQUARE_O);
-		editButton   = new Button("Edit", FontAwesome.EDIT);
-		deleteButton = new Button("Delete", FontAwesome.TRASH);
+		grid         = new Grid(); 
+		addButton    = new Button("New", VaadinIcons.PLUS_SQUARE_LEFT_O);
+		editButton   = new Button("Edit", VaadinIcons.EDIT);
+		deleteButton = new Button("Delete", VaadinIcons.TRASH);
 		
 		editButton.setEnabled(false);
 		deleteButton.setEnabled(false);
@@ -74,11 +74,11 @@ public abstract class EntityView<T extends IEntity> extends VerticalLayout imple
 		this.setSpacing(true);
 
 		grid.setSizeFull();
-		grid.setColumns((Object[]) columnNames);
+		grid.setColumns(columnNames);
 
 		// Connect selected Customer to editor or hide if none is selected
 		grid.addSelectionListener(e -> {
-			if (e.getSelected().isEmpty()) {
+			if (e.getAllSelectedItems().isEmpty()) {
 				editButton.setEnabled(false);
 				deleteButton.setEnabled(false);
 			}
@@ -94,12 +94,12 @@ public abstract class EntityView<T extends IEntity> extends VerticalLayout imple
 		});
 		editButton.addClickListener(e -> {
 			@SuppressWarnings("unchecked")
-			T entity = (T) grid.getSelectedRow();
+			T entity = (T) grid.getSelectedItems().iterator().next();
 			editEntity(entity);
 		});
 		deleteButton.addClickListener(e -> {
 			@SuppressWarnings("unchecked")
-			T entity = (T) grid.getSelectedRow();
+			T entity = (T) grid.getSelectedItems().iterator().next();
 			deleteEntityQuestion(entity);
 		});
 
@@ -151,10 +151,8 @@ public abstract class EntityView<T extends IEntity> extends VerticalLayout imple
 	}
 	
 	protected void listCustomers(String s) {
-		List<T>              entites   = getEntities();
-		BeanItemContainer<T> container = new BeanItemContainer<T>(clazz, entites);
-		
-		grid.setContainerDataSource(container);
+		List<T> entites = getEntities();		
+		grid.setItems(entites);
 	}
 	
 	protected abstract List<T> getEntities();

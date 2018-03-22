@@ -17,6 +17,7 @@ public class RoleForm extends AbstractForm<IRole> {
     TextField description = new MTextField("Description");   
     
     public RoleForm(IRole user) {
+    	super(IRole.class);
     	setSizeUndefined();    	
     	
     	if (user != null) {

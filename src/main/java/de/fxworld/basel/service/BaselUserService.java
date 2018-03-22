@@ -55,7 +55,7 @@ public class BaselUserService implements IBaselUserService {
 	@Override
 	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
 	public IUser getUser(String id) {		
-		return userRepository.findOne(id);
+		return userRepository.findById(id).get();
 	}
 	
 	@Override
@@ -89,7 +89,7 @@ public class BaselUserService implements IBaselUserService {
 	@Override
 	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
 	public IGroup getGroup(String id) {
-		return groupRepository.findOne(id);
+		return groupRepository.findById(id).get();
 	}
 	
 	@Override
@@ -125,7 +125,7 @@ public class BaselUserService implements IBaselUserService {
 	@Override
 	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
 	public IRole getRole(String id) {
-		return roleRepository.findOne(id);
+		return roleRepository.findById(id).get();
 	}
 
 	@Override
