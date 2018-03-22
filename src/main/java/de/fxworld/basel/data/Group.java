@@ -1,9 +1,6 @@
 package de.fxworld.basel.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -21,6 +18,8 @@ import de.fxworld.basel.api.IUser;
 
 @Entity(name = "basel_group")
 public class Group extends AbstractEntity<Group> implements IGroup {
+
+	private static final long serialVersionUID = 7743634964801718612L;
 
 	private String description;
 	

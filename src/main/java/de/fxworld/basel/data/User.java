@@ -19,6 +19,8 @@ import de.fxworld.basel.api.IUser;
 @Entity(name = "basel_user")
 public class User extends AbstractEntity<User> implements IUser {
 
+	private static final long serialVersionUID = 5630793573665684717L;
+	
 	@JsonIgnore
 	private String password;
 	private String email;

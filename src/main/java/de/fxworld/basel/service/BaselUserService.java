@@ -6,15 +6,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import de.fxworld.basel.api.IBaselUserService;
 import de.fxworld.basel.api.IGroup;
 import de.fxworld.basel.api.IRole;
 import de.fxworld.basel.api.IUser;
-import de.fxworld.basel.data.DataInitializer;
 import de.fxworld.basel.data.Group;
 import de.fxworld.basel.data.IGroupRepository;
 import de.fxworld.basel.data.IRoleRepository;

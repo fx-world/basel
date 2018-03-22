@@ -17,7 +17,9 @@ import com.vaadin.ui.Window;
 
 public class LoginForm extends VerticalLayout {
 
-    public LoginForm(UI ui, LoginCallback callback) {
+	private static final long serialVersionUID = -6682003270550359442L;
+
+	public LoginForm(UI ui, LoginCallback callback) {
         setMargin(false);
         setSpacing(false);
                 

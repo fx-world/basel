@@ -3,11 +3,12 @@ package de.fxworld.basel.data;
 import javax.persistence.Entity;
 
 import de.fxworld.basel.api.IEntity;
-import de.fxworld.basel.api.IGroup;
 import de.fxworld.basel.api.IRole;
 
 @Entity(name = "basel_role")
 public class Role extends AbstractEntity<Role> implements IRole {
+	
+	private static final long serialVersionUID = 1344003156000143695L;
 	
 	private String description;
 	
@@ -18,11 +19,17 @@ public class Role extends AbstractEntity<Role> implements IRole {
 		super(rolename);		
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.data.AbstractEntity#isValid()
+	 */
 	@Override
 	public boolean isValid() {		
 		return super.isValid();
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.data.AbstractEntity#update(de.fxworld.basel.api.IEntity)
+	 */
 	@Override
 	public void update(IEntity entity) {
 		super.update(entity);

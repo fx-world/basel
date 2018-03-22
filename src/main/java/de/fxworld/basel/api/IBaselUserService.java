@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.springframework.security.access.annotation.Secured;
 
-import de.fxworld.basel.data.DataInitializer;
-
 public interface IBaselUserService {
 	
 	///////////////////////////////////////////////////////////////////

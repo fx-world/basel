@@ -35,6 +35,8 @@ public class BaselUserDetailsService implements UserDetailsService {
 	
 	class BaselUserDetails implements UserDetails {
 
+		private static final long serialVersionUID = 2893035082893639405L;
+		
 		private IUser user;
 		
 		public BaselUserDetails(IUser user) {

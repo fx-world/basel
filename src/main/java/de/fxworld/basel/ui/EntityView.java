@@ -90,12 +90,10 @@ public abstract class EntityView<T extends IEntity> extends VerticalLayout imple
 			newEntity();
 		});
 		editButton.addClickListener(e -> {
-			@SuppressWarnings("unchecked")
 			T entity = (T) grid.getSelectedItems().iterator().next();
 			editEntity(entity);
 		});
 		deleteButton.addClickListener(e -> {
-			@SuppressWarnings("unchecked")
 			T entity = (T) grid.getSelectedItems().iterator().next();
 			deleteEntityQuestion(entity);
 		});
@@ -127,7 +125,7 @@ public abstract class EntityView<T extends IEntity> extends VerticalLayout imple
 	}
 	
 	protected void deleteEntityQuestion(T entity) {
-		ConfirmDialog dialog = ConfirmDialog.show(getUI(), String.format("Should %s be deleted?", entity.getName()), new ConfirmDialog.Listener() {
+		ConfirmDialog.show(getUI(), String.format("Should %s be deleted?", entity.getName()), new ConfirmDialog.Listener() {
 
             public void onClose(ConfirmDialog dialog) {
                 if (dialog.isConfirmed()) {

@@ -1,8 +1,6 @@
 package de.fxworld.basel.data;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,6 +16,8 @@ import de.fxworld.basel.api.IEntity;
 @SuppressWarnings("rawtypes")
 @MappedSuperclass 
 public abstract class AbstractEntity<T extends AbstractEntity> implements IEntity {
+
+	private static final long serialVersionUID = -714558174629149711L;
 
 	@Id
 	//@GeneratedValue(strategy = GenerationType.AUTO)
@@ -50,7 +50,6 @@ public abstract class AbstractEntity<T extends AbstractEntity> implements IEntit
 	public void update(IEntity entity) {
 		setName(entity.getName());
 	}
-	
 
 	/* (non-Javadoc)
 	 * @see de.fxworld.basel.data.IGroup#getId()
@@ -60,10 +59,16 @@ public abstract class AbstractEntity<T extends AbstractEntity> implements IEntit
 		return id;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IEntity#getName()
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IEntity#setName(java.lang.String)
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}

@@ -40,18 +40,18 @@ public class DashboardView extends VerticalLayout implements View {
 		this.setMargin(true);
 		this.setSpacing(true);
 		
-		Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)    SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-		ListSelect list = new ListSelect("roles");
-
-		log.warn("test");
-		for (SimpleGrantedAuthority auth : authorities) {
-			log.warn(auth.toString());
-		}
-		
-		list.setItems(authorities);
-		list.setSizeFull();
-		
-		this.addComponent(list);
+//		Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)    SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+//		ListSelect list = new ListSelect("roles");
+//
+//		log.warn("test");
+//		for (SimpleGrantedAuthority auth : authorities) {
+//			log.warn(auth.toString());
+//		}
+//		
+//		list.setItems(authorities);
+//		list.setSizeFull();
+//		
+//		this.addComponent(list);
 	}
 
 	
