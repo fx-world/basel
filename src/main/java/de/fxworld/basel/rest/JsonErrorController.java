@@ -2,6 +2,9 @@ package de.fxworld.basel.rest;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -18,11 +21,11 @@ public class JsonErrorController implements ErrorController {
     private ErrorAttributes errorAttributes;
 
     @RequestMapping(value = PATH)
-    public ErrorJson error(WebRequest webRequest) {
+    public ErrorJson error(WebRequest webRequest, HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Object> errorAttributesMap = errorAttributes.getErrorAttributes(webRequest, false);
     	
-        return new ErrorJson(0, errorAttributesMap);
+        return new ErrorJson(response.getStatus(), errorAttributesMap);
     }
 
     @Override

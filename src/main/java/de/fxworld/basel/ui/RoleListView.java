@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.form.AbstractForm;
 
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.Grid;
 
 import de.fxworld.basel.api.IBaselUserService;
 import de.fxworld.basel.api.IGroup;
@@ -23,9 +24,15 @@ public class RoleListView extends EntityView<IRole> {
 	protected IBaselUserService service;
 	
 	public RoleListView() {
-		super(IRole.class, new RoleForm(), new String[] {"name", "description"});
+		super(IRole.class, new RoleForm());
 		
 		setSaveHandler(g -> service.saveRole(g));
+	}
+	
+	@Override
+	protected void addColumns(Grid<IRole> grid) {
+		grid.addColumn(IRole::getName).setId("name").setCaption("name");
+		grid.addColumn(IRole::getDescription).setId("description").setCaption("description");
 	}
 
 	@Override

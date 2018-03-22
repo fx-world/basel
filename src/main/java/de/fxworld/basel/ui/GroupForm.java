@@ -18,10 +18,10 @@ import de.fxworld.basel.api.IUser;
 
 public class GroupForm extends AbstractForm<IGroup> {
 
-	TextField     name        = new MTextField("Name");
-    TextField     description = new MTextField("Description");
-    TwinColSelect members     = new TwinColSelect("Members");
-    TwinColSelect roles       = new TwinColSelect("Roles");
+	TextField            name        = new MTextField("Name");
+    TextField            description = new MTextField("Description");
+    TwinColSelect<IUser> members     = new TwinColSelect<IUser>("Members");
+    TwinColSelect<IRole> roles       = new TwinColSelect<IRole>("Roles");
     
     public GroupForm(IBaselUserService service, IGroup user) {
     	super(IGroup.class);

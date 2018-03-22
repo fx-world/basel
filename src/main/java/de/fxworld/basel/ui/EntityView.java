@@ -11,7 +11,6 @@ import org.vaadin.viritin.form.AbstractForm;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.access.ViewInstanceAccessControl;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
@@ -27,9 +26,8 @@ public abstract class EntityView<T extends IEntity> extends VerticalLayout imple
 	Class<T> clazz;
 	AbstractForm<T> form;
 	Consumer<T> saveHandler;
-	String[] columnNames;
 	
-	Grid grid;
+	Grid<T> grid;
 	
 	Button addButton;
 	Button editButton;
@@ -37,10 +35,9 @@ public abstract class EntityView<T extends IEntity> extends VerticalLayout imple
 	
 	Window editWindow;
 	
-	public EntityView(Class<T> clazz, AbstractForm<T> form, String[] columnNames) {
+	public EntityView(Class<T> clazz, AbstractForm<T> form) {
 		this.clazz       = clazz;
 		this.form        = form;		
-		this.columnNames = columnNames;
 	}
 	
 	@PostConstruct
@@ -74,7 +71,7 @@ public abstract class EntityView<T extends IEntity> extends VerticalLayout imple
 		this.setSpacing(true);
 
 		grid.setSizeFull();
-		grid.setColumns(columnNames);
+		addColumns(grid);
 
 		// Connect selected Customer to editor or hide if none is selected
 		grid.addSelectionListener(e -> {
@@ -139,6 +136,8 @@ public abstract class EntityView<T extends IEntity> extends VerticalLayout imple
             }
         });
 	}
+	
+	protected abstract void addColumns(Grid<T> grid);
 	
 	protected abstract void deleteEntity(T entity);
 	

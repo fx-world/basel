@@ -23,12 +23,12 @@ public class UserForm extends AbstractForm<IUser> {
 	 */
 	private static final long serialVersionUID = -7605482083148044506L;
 	
-	TextField     name      = new MTextField("Username");
-	TextField     firstname = new MTextField("First Name");
-	TextField     lastname  = new MTextField("Last Name");
-	PasswordField password  = new PasswordField("Password");
-    TextField     email     = new MTextField("E-Mail");    
-    TwinColSelect roles     = new TwinColSelect("Roles");
+	TextField            name      = new MTextField("Username");
+	TextField            firstname = new MTextField("First Name");
+	TextField            lastname  = new MTextField("Last Name");
+	PasswordField        password  = new PasswordField("Password");
+    TextField            email     = new MTextField("E-Mail");    
+    TwinColSelect<IRole> roles     = new TwinColSelect<IRole>("Roles");
     	
 	public UserForm(IBaselUserService service) {
 		super(IUser.class);
