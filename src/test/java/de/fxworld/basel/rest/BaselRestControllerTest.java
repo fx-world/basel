@@ -2,11 +2,10 @@ package de.fxworld.basel.rest;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,9 +21,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import de.fxworld.basel.api.IBaselUserService;
-import de.fxworld.basel.api.IGroup;
+import de.fxworld.basel.api.IRole;
 import de.fxworld.basel.data.Group;
 import de.fxworld.basel.data.IGroupRepository;
 import de.fxworld.basel.data.IRoleRepository;
@@ -38,6 +38,9 @@ public class BaselRestControllerTest {
 
 	private MockMvc mvc;
 
+    @Autowired
+    private WebApplicationContext context;
+	
 	@Autowired
     private IUserRepository userRepository;
 	
@@ -58,7 +61,18 @@ public class BaselRestControllerTest {
 		userRepository.deleteAll();
 		roleRepository.deleteAll();
 		
-		mvc = MockMvcBuilders.standaloneSetup(new BaselRestController(service)).build();
+		Role adminrole = new Role(IRole.BASEL_ADMIN);
+		roleRepository.save(adminrole);
+		
+		User user = new User("fx", "password");
+		user.getRoles().add(adminrole);
+		userRepository.save(user);
+		
+		mvc = MockMvcBuilders
+				//.standaloneSetup(new BaselRestController(service))
+				.webAppContextSetup(context)
+				.apply(springSecurity())
+				.build();
 		
 		pathPrefix = "/api/v1";
 	}
@@ -72,23 +86,17 @@ public class BaselRestControllerTest {
 
 	@Test
 	public void testGetUsers() throws Exception {
-		JSONArray usersJson = new JSONArray();
-		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user").accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(content().json(usersJson.toString()));
-		
-		userRepository.save(new User("fx"));
+		JSONArray usersJson = new JSONArray();	
 		usersJson.put(new JSONObject().put("name", "fx"));
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user").accept(MediaType.APPLICATION_JSON).with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(usersJson.toString()));
 		
 		userRepository.save(new User("mila"));
 		usersJson.put(new JSONObject().put("name", "mila"));
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user").accept(MediaType.APPLICATION_JSON).with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(usersJson.toString()));
 	}
@@ -101,7 +109,8 @@ public class BaselRestControllerTest {
 		mvc.perform(MockMvcRequestBuilders.post(pathPrefix + "/user")
 				.content(userJson.toString())
 				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isCreated());
 		
 		assertNotNull(userRepository.findByName("mila"));
@@ -109,27 +118,32 @@ public class BaselRestControllerTest {
 
 	@Test
 	public void testGetUser() throws Exception {
-		userRepository.save(new User("fx"));
 		JSONObject userJson = new JSONObject().put("name", "fx");
 		
-		System.out.println(mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user/fx").accept(MediaType.APPLICATION_JSON))
+		System.out.println(mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/user/fx")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(userJson.toString()))
 			.andReturn().getResponse().getContentAsString());
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user/mila").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/user/mila")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isNotFound());
 	}
 
 	@Test
 	public void testUpdateUser() throws Exception {
-		userRepository.save(new User("fx"));
 		JSONObject userJson = new JSONObject().put("name", "mila");
 		
 		mvc.perform(MockMvcRequestBuilders.post(pathPrefix + "/user/fx")
 				.content(userJson.toString())
 				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(userJson.toString()));
 		
@@ -140,10 +154,14 @@ public class BaselRestControllerTest {
 	@Test
 	@Transactional
 	public void testGetGroupsForUser() throws Exception {
-		User fx = new User("fx");
-		userRepository.save(fx);
+//		User fx = new User("fx");
+//		userRepository.save(fx);
+		User fx = userRepository.findByName("fx");
 
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user/fx/groups").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/user/fx/groups")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(new JSONArray().toString()));
 		
@@ -158,30 +176,30 @@ public class BaselRestControllerTest {
 		JSONObject friendsJson = new JSONObject().put("name", "friends");
 		groupsJson.put(friendsJson);
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user/fx/groups").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/user/fx/groups")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(groupsJson.toString()));
 	}
 	
 	@Test
 	public void testGetRolesForUser() throws Exception {
-		User fx = new User("fx");
-		userRepository.save(fx);
-
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user/fx/roles").accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(content().json(new JSONArray().toString()));
+		User fx = userRepository.findByName("fx");
 		
-		Role admin = new Role("admin");
-		roleRepository.save(admin);
+		Role admin = roleRepository.findByName(IRole.BASEL_ADMIN);
 		fx.getRoles().add(admin);
 		userRepository.save(fx);
 		
 		JSONArray  rolesJson = new JSONArray();
-		JSONObject adminJson = new JSONObject().put("name", "admin");
+		JSONObject adminJson = new JSONObject().put("name", IRole.BASEL_ADMIN);
 		rolesJson.put(adminJson);
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user/fx/roles").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/user/fx/roles")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(rolesJson.toString()));
 	}
@@ -190,21 +208,30 @@ public class BaselRestControllerTest {
 	public void testGetGroups() throws Exception {
 		JSONArray groupsJson = new JSONArray();
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/group").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/group")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(groupsJson.toString()));
 		
 		groupRepository.save(new Group("friends"));
 		groupsJson.put(new JSONObject().put("name", "friends"));
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/group").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/group")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(groupsJson.toString()));
 		
 		groupRepository.save(new Group("family"));
 		groupsJson.put(new JSONObject().put("name", "family"));
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/group").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/group")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(groupsJson.toString()));
 	}
@@ -217,7 +244,8 @@ public class BaselRestControllerTest {
 		mvc.perform(MockMvcRequestBuilders.post(pathPrefix + "/group")
 				.content(groupJson.toString())
 				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isCreated());
 		
 		assertNotNull(groupRepository.findByName("friends"));
@@ -228,11 +256,17 @@ public class BaselRestControllerTest {
 		groupRepository.save(new Group("family"));
 		JSONObject groupJson = new JSONObject().put("name", "family");
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/group/family").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/group/family")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(groupJson.toString()));
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/group/friends").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/group/friends")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isNotFound());
 	}
 
@@ -244,7 +278,8 @@ public class BaselRestControllerTest {
 		mvc.perform(MockMvcRequestBuilders.post(pathPrefix + "/group/friends")
 				.content(groupJson.toString())
 				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(groupJson.toString()));
 		
@@ -256,21 +291,22 @@ public class BaselRestControllerTest {
 	public void testGetRoles() throws Exception {
 		JSONArray rolesJson = new JSONArray();
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/role").accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(content().json(rolesJson.toString()));
+		rolesJson.put(new JSONObject().put("name", IRole.BASEL_ADMIN));
 		
-		roleRepository.save(new Role("admin"));
-		rolesJson.put(new JSONObject().put("name", "admin"));
-		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/role").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/role")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(rolesJson.toString()));
 		
 		roleRepository.save(new Role("superuser"));
 		rolesJson.put(new JSONObject().put("name", "superuser"));
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/role").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/role")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(rolesJson.toString()));
 	}
@@ -283,7 +319,8 @@ public class BaselRestControllerTest {
 		mvc.perform(MockMvcRequestBuilders.post(pathPrefix + "/role")
 				.content(roleJson.toString())
 				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isCreated());
 		
 		assertNotNull(roleRepository.findByName("admin"));
@@ -294,11 +331,17 @@ public class BaselRestControllerTest {
 		roleRepository.save(new Role("admin"));
 		JSONObject roleJson = new JSONObject().put("name", "admin");
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/role/admin").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/role/admin")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(roleJson.toString()));
 		
-		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/role/superuser").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders
+				.get(pathPrefix + "/role/superuser")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isNotFound());
 	}
 
@@ -310,7 +353,8 @@ public class BaselRestControllerTest {
 		mvc.perform(MockMvcRequestBuilders.post(pathPrefix + "/role/admin")
 				.content(roleJson.toString())
 				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "password")))
 			.andExpect(status().isOk())
 			.andExpect(content().json(roleJson.toString()));
 		
@@ -318,4 +362,15 @@ public class BaselRestControllerTest {
 		assertNull(roleRepository.findByName("admin"));
 	}
 
+	@Test
+	public void testAccessDenied() throws Exception {		
+		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user")
+				.accept(MediaType.APPLICATION_JSON))			
+			.andExpect(status().isUnauthorized());		
+		
+		mvc.perform(MockMvcRequestBuilders.get(pathPrefix + "/user")
+				.accept(MediaType.APPLICATION_JSON)
+				.with(httpBasic("fx", "wrongpassword")))
+			.andExpect(status().isUnauthorized());
+	}
 }

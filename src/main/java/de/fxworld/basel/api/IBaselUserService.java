@@ -6,6 +6,8 @@ import org.springframework.security.access.annotation.Secured;
 
 public interface IBaselUserService {
 	
+	public IUser authenticate(String username, String password);
+	
 	///////////////////////////////////////////////////////////////////
 	// Users
 
@@ -50,8 +52,6 @@ public interface IBaselUserService {
 	
 	public IRole saveRole(IRole role);
 	
-	public void deleteRole(IRole role);
-
-	
+	public void deleteRole(IRole role);	
 
 }

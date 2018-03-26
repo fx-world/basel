@@ -54,6 +54,11 @@ public class User extends AbstractEntity<User> implements IUser {
 		super(username);
 	}
 	
+	public User(String username, String password) {
+		this(username);
+		setPassword(password);
+	}
+	
 	/* (non-Javadoc)
 	 * @see de.fxworld.basel.data.AbstractEntity#isValid()
 	 */

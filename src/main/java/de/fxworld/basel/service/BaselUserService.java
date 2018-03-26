@@ -52,11 +52,11 @@ public class BaselUserService implements IBaselUserService {
 	@Override
 	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
 	public IUser getUser(String id) {		
-		return userRepository.findById(id).get();
+		return userRepository.findById(id).orElse(null);
 	}
 	
 	@Override
-	//@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
+	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
 	public IUser getUserByName(String name) {	
 		return userRepository.findByName(name);
 	}
@@ -86,7 +86,7 @@ public class BaselUserService implements IBaselUserService {
 	@Override
 	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
 	public IGroup getGroup(String id) {
-		return groupRepository.findById(id).get();
+		return groupRepository.findById(id).orElse(null);
 	}
 	
 	@Override
@@ -122,7 +122,7 @@ public class BaselUserService implements IBaselUserService {
 	@Override
 	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
 	public IRole getRole(String id) {
-		return roleRepository.findById(id).get();
+		return roleRepository.findById(id).orElse(null);
 	}
 
 	@Override
@@ -164,6 +164,18 @@ public class BaselUserService implements IBaselUserService {
 	public IRole createRole(String name) {
 		IRole result = new Role(name);
 
+		return result;
+	}
+
+	@Override
+	public IUser authenticate(String username, String password) {
+		IUser result = null;
+		IUser user   = userRepository.findByName(username);
+		
+		if (user != null && password.equals(user.getPassword())) {
+			result = user;
+		}
+		
 		return result;
 	}
 }
