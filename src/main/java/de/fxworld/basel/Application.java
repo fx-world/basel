@@ -23,8 +23,7 @@ import org.springframework.transaction.jta.JtaTransactionManager;
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class Application extends JpaBaseConfiguration {
 
-	private static final Logger log = LoggerFactory.getLogger(Application.class);
-	
+	private static final Logger log = LoggerFactory.getLogger(Application.class);	
 	
     @SuppressWarnings("unused")
 	public static void main(String[] args) {
