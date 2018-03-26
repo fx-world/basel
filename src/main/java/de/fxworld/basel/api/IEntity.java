@@ -1,8 +1,10 @@
 package de.fxworld.basel.api;
 
-public interface IEntity {
+import java.io.Serializable;
 
-	public long getId();
+public interface IEntity extends Serializable {
+
+	public String getId();
 	
 	public String getName();
 

@@ -5,6 +5,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import de.fxworld.basel.api.IRole;
 import de.fxworld.basel.data.IGroupRepository;
 import de.fxworld.basel.data.IRoleRepository;
 import de.fxworld.basel.data.IUserRepository;
@@ -13,10 +14,6 @@ import de.fxworld.basel.data.User;
 
 @Component
 public class DataInitializer {
-
-	public static final String BASEL_USER  = "basel-user";
-
-	public static final String BASEL_ADMIN = "basel-admin";
 
 	@Autowired
 	IUserRepository userRepository;
@@ -29,16 +26,16 @@ public class DataInitializer {
 	
 	@PostConstruct
 	public void init() {
-		Role baselUserRole  = roleRepository.findByName(BASEL_USER) ;
-		Role baselAdminRole = roleRepository.findByName(BASEL_ADMIN);
+		Role baselUserRole  = roleRepository.findByName(IRole.BASEL_USER) ;
+		Role baselAdminRole = roleRepository.findByName(IRole.BASEL_ADMIN);
 		
 		if (baselUserRole == null) {
-			baselUserRole = new Role(BASEL_USER);
+			baselUserRole = new Role(IRole.BASEL_USER);
 			roleRepository.save(baselUserRole);
 		}
 		
 		if (baselAdminRole == null) {
-			baselAdminRole = new Role(BASEL_ADMIN);
+			baselAdminRole = new Role(IRole.BASEL_ADMIN);
 			roleRepository.save(baselAdminRole);
 		}
 		

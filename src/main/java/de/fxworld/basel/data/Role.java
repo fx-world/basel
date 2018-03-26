@@ -3,11 +3,12 @@ package de.fxworld.basel.data;
 import javax.persistence.Entity;
 
 import de.fxworld.basel.api.IEntity;
-import de.fxworld.basel.api.IGroup;
 import de.fxworld.basel.api.IRole;
 
 @Entity(name = "basel_role")
 public class Role extends AbstractEntity<Role> implements IRole {
+	
+	private static final long serialVersionUID = 1344003156000143695L;
 	
 	private String description;
 	
@@ -18,11 +19,17 @@ public class Role extends AbstractEntity<Role> implements IRole {
 		super(rolename);		
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.data.AbstractEntity#isValid()
+	 */
 	@Override
 	public boolean isValid() {		
 		return super.isValid();
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.data.AbstractEntity#update(de.fxworld.basel.api.IEntity)
+	 */
 	@Override
 	public void update(IEntity entity) {
 		super.update(entity);
@@ -49,41 +56,5 @@ public class Role extends AbstractEntity<Role> implements IRole {
 	@Override
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Role other = (Role) obj;
-		if (description == null) {
-			if (other.description != null) {
-				return false;
-			}
-		} else if (!description.equals(other.description)) {
-			return false;
-		}
-		return true;
 	}
 }

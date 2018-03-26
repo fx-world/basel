@@ -1,6 +1,6 @@
 package de.fxworld.basel.api;
 
-import java.util.Collection;
+import java.util.Set;
 
 public interface IUser extends IEntity {
 
@@ -20,8 +20,12 @@ public interface IUser extends IEntity {
 
 	void setLastName(String lastName);
 
-	Collection<? extends IRole> getRoles();
+	Set<IRole> getRoles();
 
-	Collection<? extends IGroup> getGroups();
+	void setRoles(Set<IRole> roles);
+	
+	Set<IGroup> getGroups();
+
+	Set<IRole> getAllRoles();
 
 }

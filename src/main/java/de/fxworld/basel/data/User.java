@@ -1,8 +1,7 @@
 package de.fxworld.basel.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,11 +13,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.fxworld.basel.api.IEntity;
 import de.fxworld.basel.api.IGroup;
+import de.fxworld.basel.api.IRole;
 import de.fxworld.basel.api.IUser;
 
 @Entity(name = "basel_user")
 public class User extends AbstractEntity<User> implements IUser {
 
+	private static final long serialVersionUID = 5630793573665684717L;
+	
 	@JsonIgnore
 	private String password;
 	private String email;
@@ -26,24 +28,24 @@ public class User extends AbstractEntity<User> implements IUser {
 	private String lastName;
 
 	@JsonIgnore
-	@ManyToMany() //fetch=FetchType.EAGER
+	@ManyToMany(targetEntity=Group.class) //fetch=FetchType.EAGER
 	@JoinTable(name="basel_user_in_group",
 		joinColumns=
 			    @JoinColumn(name="user_id", referencedColumnName="id"),
         inverseJoinColumns=
         		@JoinColumn(name="group_id", referencedColumnName="id")
         )
-	private List<Group> groups = new ArrayList<Group>();
+	private Set<IGroup> groups = new HashSet<IGroup>();
 	
 	@JsonIgnore
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER, targetEntity=Role.class)
 	@JoinTable(name="basel_user_role",
 		joinColumns=
             @JoinColumn(name="user_id", referencedColumnName="id"),
         inverseJoinColumns=
             @JoinColumn(name="role_id", referencedColumnName="id")
         )
-	private List<Role> roles = new ArrayList<Role>();
+	private Set<IRole> roles = new HashSet<IRole>();
 	
 	public User() {
 	}
@@ -52,11 +54,22 @@ public class User extends AbstractEntity<User> implements IUser {
 		super(username);
 	}
 	
+	public User(String username, String password) {
+		this(username);
+		setPassword(password);
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.data.AbstractEntity#isValid()
+	 */
 	@Override
 	public boolean isValid() {		
 		return super.isValid();
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.data.AbstractEntity#update(de.fxworld.basel.api.IEntity)
+	 */
 	@Override
 	public void update(IEntity entity) {
 		super.update(entity);
@@ -67,13 +80,22 @@ public class User extends AbstractEntity<User> implements IUser {
 			setPassword(user.getPassword());
 			setFirstName(user.getFirstName());
 			setLastName(user.getLastName());
-
-//			List<Role> tempRoles = new ArrayList<Role>();
-//			
-//			tempRoles.addAll(user.getRoles());
-//			roles.clear();
-//			roles.addAll(tempRoles);
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IUser#getAllRoles()
+	 */
+	@Override
+	public Set<IRole> getAllRoles() {
+		Set<IRole> result = new HashSet<>();
+		
+		result.addAll(getRoles());
+		for (IGroup group : getGroups()) {
+			result.addAll(group.getRoles());
+		}
+		
+		return result;
 	}
 	
 	/* (non-Javadoc)
@@ -146,83 +168,25 @@ public class User extends AbstractEntity<User> implements IUser {
 	 * @see de.fxworld.basel.data.IUser#getRoles()
 	 */
 	@Override
-	public List<Role> getRoles() {
+	public Set<IRole> getRoles() {
+		roles.isEmpty(); // to force EclipseLink to resolve it
 		return roles;
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IUser#setRoles(java.util.Set)
+	 */
+	@Override
+	public void setRoles(Set<IRole> roles) {
+		this.roles = roles;
 	}
 	
 	/* (non-Javadoc)
 	 * @see de.fxworld.basel.api.IUser#getGroups()
 	 */
 	@Override
-	public Collection<Group> getGroups() {		
+	public Set<IGroup> getGroups() {
+		groups.isEmpty(); // to force EclipseLink to resolve it
 		return groups;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
-		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		User other = (User) obj;
-		if (email == null) {
-			if (other.email != null) {
-				return false;
-			}
-		} else if (!email.equals(other.email)) {
-			return false;
-		}
-		if (firstName == null) {
-			if (other.firstName != null) {
-				return false;
-			}
-		} else if (!firstName.equals(other.firstName)) {
-			return false;
-		}
-		if (lastName == null) {
-			if (other.lastName != null) {
-				return false;
-			}
-		} else if (!lastName.equals(other.lastName)) {
-			return false;
-		}
-		if (password == null) {
-			if (other.password != null) {
-				return false;
-			}
-		} else if (!password.equals(other.password)) {
-			return false;
-		}
-		if (roles == null) {
-			if (other.roles != null) {
-				return false;
-			}
-		} else if (!equals(roles, other.roles)) {			
-			return false;
-		}
-		return true;
-	}
+	}	
 }

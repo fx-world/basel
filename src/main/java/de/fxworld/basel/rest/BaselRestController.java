@@ -32,6 +32,8 @@ import de.fxworld.basel.data.User;
 @RequestMapping("/api/v1")
 public class BaselRestController {
 
+	// error handling https://gist.github.com/jonikarppinen/662c38fb57a23de61c8b
+	
 	protected IBaselUserService service;
 		
 	@Inject
@@ -43,6 +45,7 @@ public class BaselRestController {
 	// Users
 	
 	@RequestMapping(path="/user", method = RequestMethod.GET)
+	//@Secured("ROLE_ADMIN")
     public List<IUser> getUsers() {	
         return createList(service.getUsers());
     }

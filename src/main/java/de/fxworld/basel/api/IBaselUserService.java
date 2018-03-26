@@ -1,15 +1,22 @@
 package de.fxworld.basel.api;
 
+import java.util.List;
+
+import org.springframework.security.access.annotation.Secured;
+
 public interface IBaselUserService {
+	
+	public IUser authenticate(String username, String password);
 	
 	///////////////////////////////////////////////////////////////////
 	// Users
 
 	public IUser createUser(String name);
+
+	@Secured("ULTRA_ADMIN")
+	public List<IUser> getUsers();
 	
-	public Iterable<? extends IUser> getUsers();
-	
-	public IUser getUser(long id);
+	public IUser getUser(String id);
 	
 	public IUser getUserByName(String name);
 	
@@ -22,9 +29,9 @@ public interface IBaselUserService {
 	
 	public IGroup createGroup(String name);
 	
-	public Iterable<? extends IGroup> getGroups();
+	public List<IGroup> getGroups();
 	
-	public IGroup getGroup(long id);
+	public IGroup getGroup(String id);
 	
 	public IGroup getGroupByName(String name);
 	
@@ -37,16 +44,14 @@ public interface IBaselUserService {
 	
 	public IRole createRole(String name);
 	
-	public Iterable<? extends IRole> getRoles();
+	public List<IRole> getRoles();
 	
-	public IRole getRole(long id);
+	public IRole getRole(String id);
 	
 	public IRole getRoleByName(String name);
 	
 	public IRole saveRole(IRole role);
 	
-	public void deleteRole(IRole role);
-
-	
+	public void deleteRole(IRole role);	
 
 }

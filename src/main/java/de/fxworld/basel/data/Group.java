@@ -1,8 +1,7 @@
 package de.fxworld.basel.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,31 +14,34 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.fxworld.basel.api.IEntity;
 import de.fxworld.basel.api.IGroup;
 import de.fxworld.basel.api.IRole;
+import de.fxworld.basel.api.IUser;
 
 @Entity(name = "basel_group")
 public class Group extends AbstractEntity<Group> implements IGroup {
 
+	private static final long serialVersionUID = 7743634964801718612L;
+
 	private String description;
 	
 	@JsonIgnore
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER, targetEntity=User.class)
 	@JoinTable(name="basel_user_in_group",
 		joinColumns=
             @JoinColumn(name="group_id", referencedColumnName="id"),
         inverseJoinColumns=
             @JoinColumn(name="user_id", referencedColumnName="id")
         )
-	private List<User> members = new ArrayList<User>();
+	private Set<IUser> members = new HashSet<IUser>();
 	
 	@JsonIgnore
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER, targetEntity=Role.class)
 	@JoinTable(name="basel_group_role",
 		joinColumns=
             @JoinColumn(name="group_id", referencedColumnName="id"),
         inverseJoinColumns=
             @JoinColumn(name="role_id", referencedColumnName="id")
         )
-	private List<Role> roles = new ArrayList<Role>();
+	private Set<IRole> roles = new HashSet<IRole>();
 	
 	public Group() {		
 	}
@@ -91,64 +93,33 @@ public class Group extends AbstractEntity<Group> implements IGroup {
 	 * @see de.fxworld.basel.data.IGroup#getMembers()
 	 */
 	@Override
-	public List<User> getMembers() {
+	public Set<IUser> getMembers() {
+		members.isEmpty();
 		return members;
 	}
 	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IGroup#setMembers(java.util.Set)
+	 */
 	@Override
-	public Collection<? extends IRole> getRoles() {
+	public void setMembers(Set<IUser> members) {		
+		this.members = members;
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.fxworld.basel.api.IGroup#getRoles()
+	 */
+	@Override
+	public Set<IRole> getRoles() {
+		roles.isEmpty();
 		return roles;
 	}
 
 	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	 * @see de.fxworld.basel.api.IGroup#setRoles(java.util.Set)
 	 */
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((members == null) ? 0 : members.hashCode());
-		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Group other = (Group) obj;
-		if (description == null) {
-			if (other.description != null) {
-				return false;
-			}
-		} else if (!description.equals(other.description)) {
-			return false;
-		}
-		if (members == null) {
-			if (other.members != null) {
-				return false;
-			}
-		} else if (!equals(members, other.members)) {
-			return false;
-		}
-		if (roles == null) {
-			if (other.roles != null) {
-				return false;
-			}
-		} else if (!equals(roles, other.roles)) {
-			return false;
-		}
-		return true;
+	public void setRoles(Set<IRole> roles) {
+		this.roles = roles;
 	}
 }

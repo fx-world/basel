@@ -1,7 +1,11 @@
 package de.fxworld.basel.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import de.fxworld.basel.api.IBaselUserService;
@@ -14,6 +18,7 @@ import de.fxworld.basel.data.IRoleRepository;
 import de.fxworld.basel.data.IUserRepository;
 import de.fxworld.basel.data.Role;
 import de.fxworld.basel.data.User;
+import de.fxworld.basel.security.SecurityConfiguration;
 
 @Service
 public class BaselUserService implements IBaselUserService {
@@ -35,81 +40,111 @@ public class BaselUserService implements IBaselUserService {
 	}
 	
 	@Override
-	public Iterable<? extends IUser> getUsers() {
-		return userRepository.findAll();
+	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
+	public List<IUser> getUsers() {
+		List<IUser> result = new ArrayList<>();
+		
+		userRepository.findAll().forEach(result::add);
+		
+		return result;
 	}
 
 	@Override
-	public IUser getUser(long id) {		
-		return userRepository.findOne(id);
+	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
+	public IUser getUser(String id) {		
+		return userRepository.findById(id).orElse(null);
 	}
 	
 	@Override
+	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
 	public IUser getUserByName(String name) {	
 		return userRepository.findByName(name);
 	}
 	
 	@Override
+	@Secured({SecurityConfiguration.ROLE_ADMIN})
 	public IUser saveUser(IUser user) {
 		return userRepository.save((User) user);
 	}
 
 	@Override
+	@Secured({SecurityConfiguration.ROLE_ADMIN})
 	public void deleteUser(IUser user) {
 		userRepository.delete((User) user);
 	}
 
 	@Override
-	public Iterable<? extends IGroup> getGroups() {
-		return groupRepository.findAll();
+	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
+	public List<IGroup> getGroups() {
+		List<IGroup> result = new ArrayList<>();
+		
+		groupRepository.findAll().forEach(result::add);
+		
+		return result;
 	}
 
 	@Override
-	public IGroup getGroup(long id) {
-		return groupRepository.findOne(id);
+	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
+	public IGroup getGroup(String id) {
+		return groupRepository.findById(id).orElse(null);
 	}
 	
 	@Override
+	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
 	public IGroup getGroupByName(String name) {		
 		return groupRepository.findByName(name);
 	}
 
 	@Override
+	@Secured({SecurityConfiguration.ROLE_ADMIN})
 	public IGroup saveGroup(IGroup group) {
 		return groupRepository.save((Group) group);
 	}
 
 	@Override
+	@Secured({SecurityConfiguration.ROLE_ADMIN})
 	public void deleteGroup(IGroup group) {
 		groupRepository.delete((Group) group); 
 	}
 
 	@Override
-	public Iterable<? extends IRole> getRoles() {
-		return roleRepository.findAll();
+	//@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
+	@Secured({SecurityConfiguration.ROLE_ADMIN})
+	//@Secured({DataInitializer.BASEL_ADMIN})
+	public List<IRole> getRoles() {
+		List<IRole> result = new ArrayList<>();
+		
+		roleRepository.findAll().forEach(result::add);
+		
+		return result;
 	}
 
 	@Override
-	public IRole getRole(long id) {
-		return roleRepository.findOne(id);
+	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
+	public IRole getRole(String id) {
+		return roleRepository.findById(id).orElse(null);
 	}
 
 	@Override
+	@Secured({SecurityConfiguration.ROLE_USER, SecurityConfiguration.ROLE_ADMIN})
 	public IRole getRoleByName(String name) {
 		return roleRepository.findByName(name);
 	}
 
 	@Override
+	@Secured({SecurityConfiguration.ROLE_ADMIN})
 	public IRole saveRole(IRole role) {
 		return roleRepository.save((Role) role);
 	}
 
 	@Override
+	@Secured({SecurityConfiguration.ROLE_ADMIN})
 	public void deleteRole(IRole role) {
 		roleRepository.delete((Role) role);
 	}
 
 	@Override
+	@Secured({SecurityConfiguration.ROLE_ADMIN})
 	public IUser createUser(String name) {
 		IUser result = new User(name);
 		
@@ -117,6 +152,7 @@ public class BaselUserService implements IBaselUserService {
 	}
 
 	@Override
+	@Secured({SecurityConfiguration.ROLE_ADMIN})
 	public IGroup createGroup(String name) {
 		IGroup result = new Group(name);
 		
@@ -124,9 +160,22 @@ public class BaselUserService implements IBaselUserService {
 	}
 
 	@Override
+	@Secured({SecurityConfiguration.ROLE_ADMIN})
 	public IRole createRole(String name) {
 		IRole result = new Role(name);
 
+		return result;
+	}
+
+	@Override
+	public IUser authenticate(String username, String password) {
+		IUser result = null;
+		IUser user   = userRepository.findByName(username);
+		
+		if (user != null && password.equals(user.getPassword())) {
+			result = user;
+		}
+		
 		return result;
 	}
 }
